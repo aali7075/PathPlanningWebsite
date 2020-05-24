@@ -2,8 +2,8 @@
   width: 25px;
   height: 25px;
   background-color: white;
-  outline: 1px solid rgb(175, 256, 248);
-  display: inline;
+  outline: 1px solid rgb(0, 0, 0, 255);
+  display: inline-block;
 }
 
 .node-start {

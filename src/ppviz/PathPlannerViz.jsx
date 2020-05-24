@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Node from "./Node/Node";
+import Node from "./node/node";
 
 import "./PathPlannerViz.css";
 
@@ -9,7 +9,7 @@ const FINISH_NODE_ROW = 10;
 const FINISH_NODE_COL = 35;
 
 //Create an  struct object for the Node
-const createNode = (col_, row_) => {
+const CreateNode = (col_, row_) => {
   // ES6 arrow style used to inherit from context of function
   return {
     col_,
@@ -23,12 +23,12 @@ const createNode = (col_, row_) => {
   };
 };
 
-const getInitialGrid = () => {
+const GetInitialGrid = () => {
   const grid = []; // Initalize 2d array will be size 20,50
   for (let row = 0; row < 20; row++) {
-    const currentRow = [];  //Intialize row
+    const currentRow = []; //Intialize row
     for (let col = 0; col < 50; col++) {
-      currentRow.push(createNode(col, row));
+      currentRow.push(CreateNode(col, row));
     }
     grid.push(currentRow);
   }
@@ -36,6 +36,46 @@ const getInitialGrid = () => {
 };
 
 export default class PathfindingVisualizer extends Component {
+  constructor() {
+    super(); //nochild components so no need to pass properties
+    this.state = {
+      grid_: [],
+    };
+  }
 
-  
+  componentDidMount() {
+    const grid_ = GetInitialGrid();
+    this.setState({ grid_ }); ///following syntax of this.state
+  }
+
+  render() {
+    const { grid_ } = this.state;
+    //grabbing attributes from this.state
+
+    console.log({ grid_ });
+    return (
+      <div className="grid">
+        {grid_.map((row_, row_idx) => {
+          //gridmap grab each row and the row index of each row
+          return (
+            <div key={row_idx}>
+              {row_.map((node, node_idx) => {
+                const { row_, col_, is_end_, is_start_, is_wall_ } = node;
+                return (
+                  <Node
+                    key={node_idx}
+                    row_={row_}
+                    col_={col_}
+                    is_start_={is_start_}
+                    is_end_={is_end_}
+                    is_wall_={is_wall_}
+                  ></Node>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 }

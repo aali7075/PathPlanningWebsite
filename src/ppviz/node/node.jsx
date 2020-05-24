@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import "./Node.css";
+import "./node.css";
 
 export default class Node extends Component {
   //export is an include for class Node
@@ -18,14 +18,19 @@ export default class Node extends Component {
       on_mouse_up_,
       on_mouse_enter_,
     } = this.props;
-    let special_node_class = is_start_
-      ? "node-start"
-      : is_end_
-      ? "node-end"
-      : ""; //default case
+    let special_node_class;
+    if (is_start_) {
+      special_node_class = "node-start";
+    }
+    if (is_end_) {
+      special_node_class = "node-end";
+    }
 
     return (
-      <div id={`node-${row}-${col}`} className={`node ${special_node_class}`}></div>
+      <div
+        id={`node-${row_}-${col_}`}
+        className={`node ${special_node_class}`}
+      ></div>
     );
   }
 }
