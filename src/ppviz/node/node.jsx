@@ -25,7 +25,7 @@ export default class Node extends Component {
       : ""; //default case
 
     return (
-      <div id={`node-${row}-${col}`} className={`node ${extraClassName}`}></div>
+      <div id={`node-${row}-${col}`} className={`node ${special_node_class}`}></div>
     );
   }
 }
