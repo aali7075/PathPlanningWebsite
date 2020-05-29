@@ -13,3 +13,26 @@
 .node-end {
   background-color: red;
 }
+
+.node-wall {
+  animation-name: wallRecolour;
+  animation-duration: 1s;
+  /* animation-timing-function: ease-in;
+  animation-delay: 0;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+  animation-play-state: running; */
+  background-color: black;
+}
+
+@keyframes wallRecolour {
+  0% {
+    transform: scale(0.6);
+    background-color: white;
+  }
+  100% {
+    transform: scale(1);
+    background-color: black;
+  }
+}

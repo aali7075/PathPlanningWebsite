@@ -35,17 +35,45 @@ const GetInitialGrid = () => {
   return grid;
 };
 
+const ToggledWall = (grid_, row_, col_) => {
+  const new_grid = grid_.slice();
+  const node = new_grid[row_][col_];
+  const new_node = {
+    ...node, // using spreads syntax to create a copy of object
+    is_wall_: !node.is_wall_,
+  };
+  new_grid[row_][col_] = new_node;
+  return new_grid;
+};
+
 export default class PathfindingVisualizer extends Component {
   constructor() {
     super(); //nochild components so no need to pass properties
     this.state = {
       grid_: [],
+      mouse_is_pressed_: false, // check whether mosue is held down
     };
   }
 
   componentDidMount() {
     const grid_ = GetInitialGrid();
     this.setState({ grid_ }); ///following syntax of this.state
+  }
+
+  handleMouseDown(row_, col_) {
+    console.log("in handle mouse down");
+    const newGrid = ToggledWall(this.state.grid_, row_, col_);
+    this.setState({ grid: newGrid, mouse_is_pressed_: true });
+  }
+
+  handleMouseEnter(row_, col_) {
+    if (!this.state.mouse_is_pressed_) return;
+    const newGrid = ToggledWall(this.state.grid_, row_, col_);
+    this.setState({ grid: newGrid });
+  }
+
+  handleMouseUp() {
+    this.setState({ mouse_is_pressed_: false });
   }
 
   render() {
@@ -69,6 +97,13 @@ export default class PathfindingVisualizer extends Component {
                     is_start_={is_start_}
                     is_end_={is_end_}
                     is_wall_={is_wall_}
+                    onMouseDown={(row_, col_) =>
+                      this.handleMouseDown(row_, col_)
+                    }
+                    onMouseEnter={(row_, col_) =>
+                      this.handleMouseEnter(row_, col_)
+                    }
+                    onMouseUp={() => this.handleMouseUp()}
                   ></Node>
                 );
               })}
