@@ -38,12 +38,15 @@ const GetInitialGrid = () => {
 const ToggledWall = (grid_, row_, col_) => {
   const new_grid = grid_.slice();
   const node = new_grid[row_][col_];
-  const new_node = {
-    ...node, // using spreads syntax to create a copy of object
-    is_wall_: !node.is_wall_,
-  };
-  new_grid[row_][col_] = new_node;
-  return new_grid;
+  console.log(node.is_wall_);
+  if (!node.is_wall_ && !node.is_start_ && !node.is_end_) {
+    const new_node = {
+      ...node, // using spreads syntax to create a copy of object
+      is_wall_: !node.is_wall_,
+    };
+    new_grid[row_][col_] = new_node;
+    return new_grid;
+  }
 };
 
 export default class PathfindingVisualizer extends Component {
