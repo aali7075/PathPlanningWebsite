@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Node from "./node/node";
 
 import "./PathPlannerViz.css";
@@ -49,7 +49,8 @@ const ToggledWall = (grid_, row_, col_) => {
   }
 };
 
-export default class PathfindingVisualizer extends Component {
+//Created as a pure compoenent for render optimization
+export default class PathfindingVisualizer extends PureComponent {
   constructor() {
     super(); //nochild components so no need to pass properties
     this.state = {
@@ -57,6 +58,22 @@ export default class PathfindingVisualizer extends Component {
       mouse_is_pressed_: false, // check whether mosue is held down
     };
   }
+
+  /*
+
+We only want to render part of the grid
+this funciton always updates as soon as the state changes. (Built in function)
+It did reduce the amount of renders but did not give us the fluid change that we needed.
+To properly use shouldComponentUpdate we would need to change our props so that
+not all the components were encapsulated inside the grid or find a differnt structure
+to allow for partial renders inside of a state array.
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+  return (this.state.grid_ != nextState.grid_) && (this.mouse_is_pressed_) ;
+}
+
+*/
 
   componentDidMount() {
     const grid_ = GetInitialGrid();
@@ -66,7 +83,8 @@ export default class PathfindingVisualizer extends Component {
   handleMouseDown(row_, col_) {
     console.log("in handle mouse down");
     const newGrid = ToggledWall(this.state.grid_, row_, col_);
-    this.setState({ grid: newGrid, mouse_is_pressed_: true });
+    const newComponent = newGrid[row_][col_];
+    this.setState({ grid_: newGrid, mouse_is_pressed_: true });
   }
 
   handleMouseEnter(row_, col_) {

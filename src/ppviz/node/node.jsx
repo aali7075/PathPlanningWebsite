@@ -5,6 +5,7 @@ import "./node.css";
 export default class Node extends Component {
   //export is an include for class Node
 
+
   render() {
     //allows us to share code between react Components
     const {
