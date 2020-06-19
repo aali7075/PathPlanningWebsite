@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import Node from "./node/node";
-import Navbar from "react-bootstrap/Navbar";
+//import Navbar from "react-bootstrap/Navbar";
 
 import "./PathPlannerViz.css";
 
