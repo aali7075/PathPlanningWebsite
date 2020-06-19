@@ -5,6 +5,10 @@ import "./node.css";
 export default class Node extends Component {
   //export is an include for class Node
 
+  onDragStart(ev, node_class) {
+    console.log("dragstart:", node_class);
+    ev.dataTransfer.setData("class", node_class);
+  }
 
   render() {
     //allows us to share code between react Components
@@ -20,11 +24,14 @@ export default class Node extends Component {
       onMouseEnter,
     } = this.props;
     let special_node_class;
+    let is_drag = "false";
     if (is_start_) {
       special_node_class = "node-start";
+      is_drag = "true";
     }
     if (is_end_) {
       special_node_class = "node-end";
+      is_drag = "true";
     }
     if (is_wall_) {
       special_node_class = "node-wall";
@@ -32,8 +39,10 @@ export default class Node extends Component {
 
     return (
       <div
+        draggable={is_drag}
         id={`node-${row_}-${col_}`}
         className={`node ${special_node_class}`}
+        onDragStart={(e) => this.onDragStart(e, special_node_class)}
         onMouseDown={() => onMouseDown(row_, col_)}
         onMouseEnter={() => onMouseEnter(row_, col_)}
         onMouseUp={() => onMouseUp()}

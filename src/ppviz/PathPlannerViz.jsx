@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import Node from "./node/node";
+import Navbar from "react-bootstrap/Navbar";
 
 import "./PathPlannerViz.css";
 
@@ -38,15 +39,14 @@ const GetInitialGrid = () => {
 const ToggledWall = (grid_, row_, col_) => {
   const new_grid = grid_.slice();
   const node = new_grid[row_][col_];
-  console.log(node.is_wall_);
   if (!node.is_wall_ && !node.is_start_ && !node.is_end_) {
     const new_node = {
       ...node, // using spreads syntax to create a copy of object
       is_wall_: !node.is_wall_,
     };
     new_grid[row_][col_] = new_node;
-    return new_grid;
   }
+  return new_grid;
 };
 
 //Created as a pure compoenent for render optimization
@@ -81,9 +81,8 @@ to allow for partial renders inside of a state array.
   }
 
   handleMouseDown(row_, col_) {
-    console.log("in handle mouse down");
     const newGrid = ToggledWall(this.state.grid_, row_, col_);
-    const newComponent = newGrid[row_][col_];
+    //const newComponent = newGrid[row_][col_];
     this.setState({ grid_: newGrid, mouse_is_pressed_: true });
   }
 
@@ -97,11 +96,14 @@ to allow for partial renders inside of a state array.
     this.setState({ mouse_is_pressed_: false });
   }
 
+  handleDragOver(ev) {
+    ev.preventDefault();
+  }
+
   render() {
     const { grid_ } = this.state;
     //grabbing attributes from this.state
 
-    console.log({ grid_ });
     return (
       <div className="grid">
         {grid_.map((row_, row_idx) => {
@@ -125,6 +127,7 @@ to allow for partial renders inside of a state array.
                       this.handleMouseEnter(row_, col_)
                     }
                     onMouseUp={() => this.handleMouseUp()}
+                    onDragOver={(e) => this.handleDragOver(e)}
                   ></Node>
                 );
               })}
