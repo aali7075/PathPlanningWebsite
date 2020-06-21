@@ -1,0 +1,7 @@
+.root {
+  flexgrow: 1;
+}
+
+.menubutton: {
+  marginright: theme.spacing(2);
+}
