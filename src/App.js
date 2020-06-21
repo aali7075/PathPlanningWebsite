@@ -8,8 +8,8 @@ function App() {
     // add the nav bar here
 
     <div className="App">
-      <PathfindingVisualizer />
       <SidebarExampleVisible />
+      <PathfindingVisualizer />
     </div>
   );
 }
