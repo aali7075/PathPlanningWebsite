@@ -22,6 +22,9 @@ const CreateNode = (col_, row_) => {
     is_visited_: false,
     previous_node: null,
     distance_: Infinity,
+    is_drag_:
+      row_ == (START_NODE_ROW && col_ == START_NODE_COL) ||
+      (FINISH_NODE_ROW && col_ == FINISH_NODE_COL),
   };
 };
 
@@ -46,6 +49,30 @@ const ToggledWall = (grid_, row_, col_) => {
       is_wall_: !node.is_wall_,
     };
     new_grid[row_][col_] = new_node;
+  }
+  return new_grid;
+};
+
+const ToggleStartEnd = (grid_, origin_row, origin_col, row_, col_, is_end_) => {
+  const new_grid = grid_.slice();
+  const old_dest_node = new_grid[row_][col_];
+  const old_origin_node = new_grid[origin_row][origin_col];
+  const is_end = is_end_ == "true";
+  console.log("ToggleStartEnd ", is_end);
+  if (!old_dest_node.is_start_ && !old_dest_node.is_end_) {
+    const dest_node = {
+      ...old_dest_node,
+      is_start_: !is_end,
+      is_end_: is_end,
+    };
+    new_grid[row_][col_] = dest_node;
+    const origin_node = {
+      ...old_origin_node,
+      is_start_: false,
+      is_wall_: false,
+      is_end_: false,
+    };
+    new_grid[origin_row][origin_col] = origin_node;
   }
   return new_grid;
 };
@@ -96,9 +123,30 @@ to allow for partial renders inside of a state array.
   handleMouseUp() {
     this.setState({ mouse_is_pressed_: false });
   }
-
+  handleDragStart(ev, is_end_, row_, col_) {
+    console.log("is_end_: ", is_end_, row_, col_);
+    ev.dataTransfer.setData("is_end_", is_end_);
+    ev.dataTransfer.setData("row_", row_);
+    ev.dataTransfer.setData("col_", col_);
+  }
   handleDragOver(ev) {
     ev.preventDefault();
+  }
+  handleDrop(ev, row_, col_) {
+    let is_end_ = ev.dataTransfer.getData("is_end_");
+    let origin_row = ev.dataTransfer.getData("row_");
+    let origin_col = ev.dataTransfer.getData("col_");
+    console.log(is_end_, row_, col_);
+    console.log("origin position ", origin_row, origin_col);
+    const newGrid = ToggleStartEnd(
+      this.state.grid_,
+      origin_row,
+      origin_col,
+      row_,
+      col_,
+      is_end_
+    );
+    this.setState({ grid: newGrid });
   }
 
   render() {
@@ -112,15 +160,28 @@ to allow for partial renders inside of a state array.
           return (
             <div key={row_idx}>
               {row_.map((node, node_idx) => {
-                const { row_, col_, is_end_, is_start_, is_wall_ } = node;
+                const {
+                  row_,
+                  col_,
+                  is_end_,
+                  is_start_,
+                  is_wall_,
+                  is_drag_,
+                } = node;
                 return (
                   <Node
+                    draggable={is_drag_}
                     key={node_idx}
                     row_={row_}
                     col_={col_}
                     is_start_={is_start_}
                     is_end_={is_end_}
                     is_wall_={is_wall_}
+                    onDragStart={(e, is_end_, row_, col_) =>
+                      this.handleDragStart(e, is_end_, row_, col_)
+                    }
+                    onDragOver={(e) => this.handleDragOver(e)}
+                    onDrop={(e, row_, col_) => this.handleDrop(e, row_, col_)}
                     onMouseDown={(row_, col_) =>
                       this.handleMouseDown(row_, col_)
                     }
@@ -128,7 +189,6 @@ to allow for partial renders inside of a state array.
                       this.handleMouseEnter(row_, col_)
                     }
                     onMouseUp={() => this.handleMouseUp()}
-                    onDragOver={(e) => this.handleDragOver(e)}
                   ></Node>
                 );
               })}
