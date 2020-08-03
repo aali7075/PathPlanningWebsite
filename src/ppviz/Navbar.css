@@ -6,6 +6,7 @@
   marginright: theme.spacing(2);
 }
 
-.AppBar{
-  background: '#2E3B55';
+.Spacer {
+  padding-left: 20px;
+  padding-right: 0px;
 }

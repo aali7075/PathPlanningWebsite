@@ -7,13 +7,32 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import BrushIcon from "@material-ui/icons/Brush";
+import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import RedoIcon from "@material-ui/icons/Redo";
 
 export default class HotBar extends Component {
-  handleOnClick() {
-    console.log("SLATT SLATT");
+  constructor() {
+    super();
+    this.state = {
+      wallMode: "Wall Off",
+    };
   }
+  handleOnClickWall() {
+    let wall = this.state.wallMode === "Wall Off" ? "Wall On" : "Wall Off";
+    this.setState({ wallMode: wall });
+  }
+  handleOnClickStartViz() {
+    //calls algorithms
+  }
+  handleOnClickReset() {
+    //calls reset function
+  }
+  handleOnClickRemoveWall() {
+    //remove wall
+  }
+
   render() {
-    let wallMode = "Wall Off";
     return (
       <div className="PureComponent">
         <AppBar
@@ -27,13 +46,51 @@ export default class HotBar extends Component {
               className="menubutton"
               color="inherit"
               aria-label="menu"
-              onClick={() => this.handleOnClick()}
-              //style={{ color: green[500] }}
+              onClick={() => this.handleOnClickStartViz()}
             >
-              <BrushIcon  />
+              <DirectionsRunIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit" >
-              {wallMode}
+            <Typography variant="h6" color="inherit">
+              Start Path Visualizer
+            </Typography>
+            <div className="Spacer"></div>
+            <IconButton
+              edge="start"
+              className="menubutton"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => this.handleOnClickReset()}
+            >
+              <HighlightOffIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              Reset
+            </Typography>
+            <div className="Spacer"></div>
+            <IconButton
+              edge="start"
+              className="menubutton"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => this.handleOnClickWall()}
+            >
+              <BrushIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              {this.state.wallMode}
+            </Typography>
+            <div className="Spacer"></div>
+            <IconButton
+              edge="start"
+              className="menubutton"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => this.handleOnClickRemoveWall()}
+            >
+              <RedoIcon />
+            </IconButton>
+            <Typography variant="h6" color="inherit">
+              Remove Wall
             </Typography>
           </Toolbar>
         </AppBar>
