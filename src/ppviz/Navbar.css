@@ -5,3 +5,7 @@
 .menubutton: {
   marginright: theme.spacing(2);
 }
+
+.AppBar{
+  background: '#2E3B55';
+}

@@ -4,32 +4,6 @@ import "./node.css";
 
 export default class Node extends Component {
   //export is an include for class Node
-// Try putting this into the pathplanner instead. Components can't change thier own props!
-  // onDragStart(ev, node_class) {
-  //   console.log("dragstart:", node_class);
-  //   ev.dataTransfer.setData("class", node_class);
-  // }
-  //
-  // onDragOver(ev){
-  //   console.log("Dragging over");
-  //   ev.preventDefault();
-  // }
-  // onDrop(ev){
-  //   let node_class = ev.dataTransfer.getData("class");
-  //   console.log(node_class);
-  //   //console.log("This.props is", this.props);
-  //   switch(node_class){
-  //     case "node-start":
-  //     console.log("this.state is", this.state);
-  //     //this.props.is_start_=true;
-  //     break;
-  //     case "node-end":
-  //     break;
-  //     //this.props.is_end_=true;
-  //     default:
-  //   }
-  //   //this.props.
-  // }
 
   render() {
     //allows us to share code between react Components

@@ -59,7 +59,10 @@ const ToggleStartEnd = (grid_, origin_row, origin_col, row_, col_, is_end_) => {
   const old_origin_node = new_grid[origin_row][origin_col];
   const is_end = is_end_ == "true";
   console.log("ToggleStartEnd ", is_end);
-  if (!old_dest_node.is_start_ && !old_dest_node.is_end_) {
+  if (
+    !old_dest_node.is_start_ &&
+    !old_dest_node.is_end_ 
+  ) {
     const dest_node = {
       ...old_dest_node,
       is_start_: !is_end,
