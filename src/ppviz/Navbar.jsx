@@ -10,6 +10,7 @@ import BrushIcon from "@material-ui/icons/Brush";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import RedoIcon from "@material-ui/icons/Redo";
+import PathfindingVisualizer from "./PathPlannerViz";
 
 export default class HotBar extends Component {
   constructor() {
@@ -94,6 +95,10 @@ export default class HotBar extends Component {
             </Typography>
           </Toolbar>
         </AppBar>
+        <PathfindingVisualizer
+        wallToggle = {this.state.wallMode === "Wall Off" ? false : true}
+        >
+        </PathfindingVisualizer>
       </div>
     );
   }

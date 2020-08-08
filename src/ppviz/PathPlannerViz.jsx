@@ -29,7 +29,7 @@ const CreateNode = (col_, row_) => {
 };
 
 const GetInitialGrid = () => {
-  const grid = []; // Initalize 2d array will be size 20,50
+  const grid = []; // Initalize 2d ar<PathfindingVisualizer />ray will be size 20,50
   for (let row = 0; row < 20; row++) {
     const currentRow = []; //Intialize row
     for (let col = 0; col < 50; col++) {
@@ -59,10 +59,7 @@ const ToggleStartEnd = (grid_, origin_row, origin_col, row_, col_, is_end_) => {
   const old_origin_node = new_grid[origin_row][origin_col];
   const is_end = is_end_ == "true";
   console.log("ToggleStartEnd ", is_end);
-  if (
-    !old_dest_node.is_start_ &&
-    !old_dest_node.is_end_ 
-  ) {
+  if (!old_dest_node.is_start_ && !old_dest_node.is_end_ && !old_dest_node.is_wall_) {
     const dest_node = {
       ...old_dest_node,
       is_start_: !is_end,
@@ -112,9 +109,12 @@ to allow for partial renders inside of a state array.
   }
 
   handleMouseDown(row_, col_) {
-    const newGrid = ToggledWall(this.state.grid_, row_, col_);
-    //const newComponent = newGrid[row_][col_];
-    this.setState({ grid_: newGrid, mouse_is_pressed_: true });
+    if (this.props.wallToggle) {
+      console.log('working???????')
+      const newGrid = ToggledWall(this.state.grid_, row_, col_);
+      //const newComponent = newGrid[row_][col_];
+      this.setState({ grid_: newGrid, mouse_is_pressed_: true });
+    }
   }
 
   handleMouseEnter(row_, col_) {
@@ -155,6 +155,8 @@ to allow for partial renders inside of a state array.
   render() {
     const { grid_ } = this.state;
     //grabbing attributes from this.state
+    var { wallToggle } = this.props;
+    console.log("Wall Toggle in Path Planner Viz ", wallToggle);
 
     return (
       <div className="grid">

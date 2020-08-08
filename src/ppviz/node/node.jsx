@@ -33,7 +33,7 @@ export default class Node extends Component {
       is_drag_ = "true";
     }
     if (is_wall_) {
-      //special_node_class = "node-wall";
+      special_node_class = "node-wall";
     }
 
     return (
