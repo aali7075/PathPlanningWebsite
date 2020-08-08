@@ -53,13 +53,30 @@ const ToggledWall = (grid_, row_, col_) => {
   return new_grid;
 };
 
+const RemoveWall = (grid_, row_, col_) => {
+  const new_grid = grid_.slice();
+  const node = new_grid[row_][col_];
+  if (node.is_wall_) {
+    const new_node = {
+      ...node, // using spreads syntax to create a copy of object
+      is_wall_: !node.is_wall_,
+    };
+    new_grid[row_][col_] = new_node;
+  }
+  return new_grid;
+};
+
 const ToggleStartEnd = (grid_, origin_row, origin_col, row_, col_, is_end_) => {
   const new_grid = grid_.slice();
   const old_dest_node = new_grid[row_][col_];
   const old_origin_node = new_grid[origin_row][origin_col];
   const is_end = is_end_ == "true";
   console.log("ToggleStartEnd ", is_end);
-  if (!old_dest_node.is_start_ && !old_dest_node.is_end_ && !old_dest_node.is_wall_) {
+  if (
+    !old_dest_node.is_start_ &&
+    !old_dest_node.is_end_ &&
+    !old_dest_node.is_wall_
+  ) {
     const dest_node = {
       ...old_dest_node,
       is_start_: !is_end,
@@ -110,8 +127,13 @@ to allow for partial renders inside of a state array.
 
   handleMouseDown(row_, col_) {
     if (this.props.wallToggle) {
-      console.log('working???????')
+      console.log("working???????");
       const newGrid = ToggledWall(this.state.grid_, row_, col_);
+      //const newComponent = newGrid[row_][col_];
+      this.setState({ grid_: newGrid, mouse_is_pressed_: true });
+    }
+    if (this.props.removeWallState) {
+      const newGrid = RemoveWall(this.state.grid_, row_, col_);
       //const newComponent = newGrid[row_][col_];
       this.setState({ grid_: newGrid, mouse_is_pressed_: true });
     }
@@ -119,7 +141,13 @@ to allow for partial renders inside of a state array.
 
   handleMouseEnter(row_, col_) {
     if (!this.state.mouse_is_pressed_) return;
-    const newGrid = ToggledWall(this.state.grid_, row_, col_);
+    let newGrid;
+    if (this.props.wallToggle) {
+      newGrid = ToggledWall(this.state.grid_, row_, col_);
+    }
+    if (this.props.removeWallState) {
+      newGrid = RemoveWall(this.state.grid_, row_, col_);
+    }
     this.setState({ grid: newGrid });
   }
 
@@ -155,9 +183,9 @@ to allow for partial renders inside of a state array.
   render() {
     const { grid_ } = this.state;
     //grabbing attributes from this.state
-    var { wallToggle } = this.props;
+    var { wallToggle, removeWallState } = this.props;
     console.log("Wall Toggle in Path Planner Viz ", wallToggle);
-
+    console.log("removeWallState ", removeWallState);
     return (
       <div className="grid">
         {grid_.map((row_, row_idx) => {

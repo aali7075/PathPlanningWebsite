@@ -17,11 +17,16 @@ export default class HotBar extends Component {
     super();
     this.state = {
       wallMode: "Wall Off",
+      fontColorAddWall: "#FFFFFF",
+      fontColorRemoveWall: "#FFFFFF",
+      removeWallState: false,
     };
   }
   handleOnClickWall() {
     let wall = this.state.wallMode === "Wall Off" ? "Wall On" : "Wall Off";
-    this.setState({ wallMode: wall });
+    let fcolor =
+      this.state.fontColorAddWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
+    this.setState({ wallMode: wall, fontColorAddWall: fcolor });
   }
   handleOnClickStartViz() {
     //calls algorithms
@@ -30,7 +35,10 @@ export default class HotBar extends Component {
     //calls reset function
   }
   handleOnClickRemoveWall() {
-    //remove wall
+    let fcolor =
+      this.state.fontColorRemoveWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
+    let rwallState = !this.state.removeWallState;
+    this.setState({ fontColorRemoveWall: fcolor, removeWallState: rwallState });
   }
 
   render() {
@@ -77,7 +85,11 @@ export default class HotBar extends Component {
             >
               <BrushIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit">
+            <Typography
+              variant="h6"
+              color="inherit"
+              style={{ color: this.state.fontColorAddWall }}
+            >
               {this.state.wallMode}
             </Typography>
             <div className="Spacer"></div>
@@ -90,15 +102,19 @@ export default class HotBar extends Component {
             >
               <RedoIcon />
             </IconButton>
-            <Typography variant="h6" color="inherit">
+            <Typography
+              variant="h6"
+              color="inherit"
+              style={{ color: this.state.fontColorRemoveWall }}
+            >
               Remove Wall
             </Typography>
           </Toolbar>
         </AppBar>
         <PathfindingVisualizer
-        wallToggle = {this.state.wallMode === "Wall Off" ? false : true}
-        >
-        </PathfindingVisualizer>
+          wallToggle={this.state.wallMode === "Wall Off" ? false : true}
+          removeWallState={this.state.removeWallState}
+        ></PathfindingVisualizer>
       </div>
     );
   }
