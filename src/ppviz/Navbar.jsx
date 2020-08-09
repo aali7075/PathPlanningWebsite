@@ -20,6 +20,7 @@ export default class HotBar extends Component {
       fontColorAddWall: "#FFFFFF",
       fontColorRemoveWall: "#FFFFFF",
       removeWallState: false,
+      isStartViz :false
     };
   }
   handleOnClickWall() {
@@ -29,7 +30,8 @@ export default class HotBar extends Component {
     this.setState({ wallMode: wall, fontColorAddWall: fcolor });
   }
   handleOnClickStartViz() {
-    //calls algorithms
+    let startViz = !this.state.isStartViz;
+    this.setState({isStartViz : startViz});
   }
   handleOnClickReset() {
     //calls reset function
@@ -114,6 +116,7 @@ export default class HotBar extends Component {
         <PathfindingVisualizer
           wallToggle={this.state.wallMode === "Wall Off" ? false : true}
           removeWallState={this.state.removeWallState}
+          isStartViz = {this.state.isStartViz}
         ></PathfindingVisualizer>
       </div>
     );

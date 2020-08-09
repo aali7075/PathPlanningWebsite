@@ -1,8 +1,7 @@
 import React, { PureComponent } from "react";
 import Node from "./node/node";
-//import Navbar from "react-bootstrap/Navbar";
 import SidebarExampleVisible from "./Navbar";
-
+import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import "./PathPlannerViz.css";
 
 const START_NODE_ROW = 10;
@@ -179,13 +178,48 @@ to allow for partial renders inside of a state array.
     );
     this.setState({ grid: newGrid });
   }
+  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          this.animateShortestPath(nodesInShortestPathOrder);
+        }, 10 * i);
+        return;
+      }
+      setTimeout(() => {
+        const node = visitedNodesInOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-visited";
+      }, 10 * i);
+    }
+  }
+
+  animateShortestPath(nodesInShortestPathOrder) {
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      setTimeout(() => {
+        const node = nodesInShortestPathOrder[i];
+        document.getElementById(`node-${node.row}-${node.col}`).className =
+          "node node-shortest-path";
+      }, 50 * i);
+    }
+  }
+
+  visualizeDijkstra() {
+    const { grid_ } = this.state;
+    const startNode = grid_[START_NODE_ROW][START_NODE_COL];
+    const finishNode = grid_[FINISH_NODE_ROW][FINISH_NODE_COL];
+    const visitedNodesInOrder = dijkstra(grid_, startNode, finishNode);
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  }
 
   render() {
     const { grid_ } = this.state;
     //grabbing attributes from this.state
-    var { wallToggle, removeWallState } = this.props;
-    console.log("Wall Toggle in Path Planner Viz ", wallToggle);
-    console.log("removeWallState ", removeWallState);
+    var { wallToggle, removeWallState, isStartViz } = this.props;
+    if (isStartViz) {
+      this.visualizeDijkstra();
+    }
     return (
       <div className="grid">
         {grid_.map((row_, row_idx) => {
