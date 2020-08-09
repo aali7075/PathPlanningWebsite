@@ -9,43 +9,43 @@ export default class Node extends Component {
     //allows us to share code between react Components
     var {
       //set constant because our properties will always be 8
-      row_,
-      col_,
-      is_wall_,
-      is_end_,
-      is_start_,
+      row,
+      col,
+      isWall,
+      isEnd,
+      isStart,
       onMouseDown, // certain html on event handlers need a specific syntax
       onMouseUp,
       onMouseEnter,
       onDragStart,
       onDragOver,
       onDrop,
-      is_drag_,
+      isDrag,
     } = this.props;
     let special_node_class;
-    is_drag_ = "false";
-    if (is_start_) {
+    isDrag = "false";
+    if (isStart) {
       special_node_class = "node-start";
-      is_drag_ = "true";
+      isDrag = "true";
     }
-    if (is_end_) {
+    if (isEnd) {
       special_node_class = "node-end";
-      is_drag_ = "true";
+      isDrag = "true";
     }
-    if (is_wall_) {
+    if (isWall) {
       special_node_class = "node-wall";
     }
 
     return (
       <div
-        draggable={is_drag_}
-        id={`node-${row_}-${col_}`}
+        draggable={isDrag}
+        id={`node-${row}-${col}`}
         className={`node ${special_node_class}`}
-        onDragStart={(e) => onDragStart(e, is_end_, row_,col_)}
+        onDragStart={(e) => onDragStart(e, isEnd, row,col)}
         onDragOver={(e) => onDragOver(e)} // Creates droppable container
-        onDrop={(e) => onDrop(e,row_,col_)}
-        onMouseDown={() => onMouseDown(row_, col_)}
-        onMouseEnter={() => onMouseEnter(row_, col_)}
+        onDrop={(e) => onDrop(e,row,col)}
+        onMouseDown={() => onMouseDown(row, col)}
+        onMouseEnter={() => onMouseEnter(row, col)}
         onMouseUp={() => onMouseUp()}
       ></div>
     );
