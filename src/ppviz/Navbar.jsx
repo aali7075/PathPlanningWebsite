@@ -11,6 +11,8 @@ import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import RedoIcon from "@material-ui/icons/Redo";
 import PathfindingVisualizer from "./PathPlannerViz";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 export default class HotBar extends Component {
   constructor() {
@@ -20,27 +22,42 @@ export default class HotBar extends Component {
       fontColorAddWall: "#FFFFFF",
       fontColorRemoveWall: "#FFFFFF",
       removeWallState: false,
-      isStartViz :false
+      isStartViz: false,
+      isReset: false,
     };
   }
   handleOnClickWall() {
-    let wall = this.state.wallMode === "Wall Off" ? "Wall On" : "Wall Off";
-    let fcolor =
-      this.state.fontColorAddWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
-    this.setState({ wallMode: wall, fontColorAddWall: fcolor });
+    if (!this.state.isStartViz) {
+      let wall = this.state.wallMode === "Wall Off" ? "Wall On" : "Wall Off";
+      let fcolor =
+        this.state.fontColorAddWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
+      this.setState({ wallMode: wall, fontColorAddWall: fcolor });
+    } else {
+      this.myFunction();
+    }
   }
   handleOnClickStartViz() {
     let startViz = !this.state.isStartViz;
-    this.setState({isStartViz : startViz});
+    this.setState({ isStartViz: startViz });
   }
   handleOnClickReset() {
-    //calls reset function
+    let reset = !this.state.isReset;
+    this.setState({isReset: reset});
   }
   handleOnClickRemoveWall() {
     let fcolor =
       this.state.fontColorRemoveWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
     let rwallState = !this.state.removeWallState;
     this.setState({ fontColorRemoveWall: fcolor, removeWallState: rwallState });
+  }
+
+  myFunction() {
+    var x = document.getElementById("text-message");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
   }
 
   render() {
@@ -111,12 +128,29 @@ export default class HotBar extends Component {
             >
               Remove Wall
             </Typography>
+            <div
+              id="text-message"
+              style={{ display: "none" }}
+              className="text-message"
+            >
+              <Typography variant="h6" style={{ color: "orange" }} color="inherit">
+                Click the Reset Button To Clear Grid and Modify Walls!
+              </Typography>
+            </div>
           </Toolbar>
         </AppBar>
+        <div
+          id="text-message"
+          style={{ display: "none" }}
+          className="text-message"
+        >
+          testing!!!!
+        </div>
         <PathfindingVisualizer
           wallToggle={this.state.wallMode === "Wall Off" ? false : true}
           removeWallState={this.state.removeWallState}
-          isStartViz = {this.state.isStartViz}
+          isStartViz={this.state.isStartViz}
+          isReset={this.state.isReset}
         ></PathfindingVisualizer>
       </div>
     );

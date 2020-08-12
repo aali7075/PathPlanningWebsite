@@ -4,10 +4,10 @@ import SidebarExampleVisible from "./Navbar";
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import "./PathPlannerViz.css";
 
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+var START_NODE_ROW = 10;
+var START_NODE_COL = 15;
+var FINISH_NODE_ROW = 10;
+var FINISH_NODE_COL = 35;
 
 //Create an  struct object for the Node
 const CreateNode = (col, row) => {
@@ -71,17 +71,20 @@ const ToggleStartEnd = (grid, origin_row, origin_col, row, col, isEnd) => {
   const old_origin_node = new_grid[origin_row][origin_col];
   const is_end = isEnd == "true";
   console.log("ToggleStartEnd ", is_end);
-  if (
-    !old_dest_node.isStart &&
-    !old_dest_node.isEnd &&
-    !old_dest_node.isWall
-  ) {
+  if (!old_dest_node.isStart && !old_dest_node.isEnd && !old_dest_node.isWall) {
     const dest_node = {
       ...old_dest_node,
       isStart: !is_end,
       isEnd: is_end,
     };
     new_grid[row][col] = dest_node;
+    if (is_end) {
+      FINISH_NODE_ROW = row;
+      FINISH_NODE_COL = col;
+    } else {
+      START_NODE_ROW = row;
+      START_NODE_COL = col;
+    }
     const origin_node = {
       ...old_origin_node,
       isStart: false,
@@ -100,6 +103,7 @@ export default class PathfindingVisualizer extends PureComponent {
     this.state = {
       grid: [],
       mouse_is_pressed_: false, // check whether mosue is held down
+      isStart: true,
     };
   }
 
@@ -189,10 +193,10 @@ to allow for partial renders inside of a state array.
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
-        console.log(
-          "document ",
-          document.getElementById(`node-${node.row}-${node.col}`)
-        );
+        // console.log(
+        //   "document ",
+        //   document.getElementById(`node-${node.row}-${node.col}`)
+        // );
         document.getElementById(`node-${node.row}-${node.col}`).className =
           "node node-visited";
       }, 10 * i);
@@ -211,6 +215,7 @@ to allow for partial renders inside of a state array.
 
   visualizeDijkstra() {
     const { grid } = this.state;
+    console.log(START_NODE_ROW, START_NODE_COL);
     const startNode = grid[START_NODE_ROW][START_NODE_COL];
     const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
     const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
@@ -218,12 +223,26 @@ to allow for partial renders inside of a state array.
     this.animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
   }
 
+  resetGrid() {
+    for (let row = 0; row < 20; row++) {
+      for (let col = 0; col < 50; col++) {
+        document.getElementById(`node-${row}-${col}`).className = "node node";
+      }
+    }
+  }
+
   render() {
     const { grid } = this.state;
     //grabbing attributes from this.state
-    var { wallToggle, removeWallState, isStartViz } = this.props;
-    if (isStartViz) {
+    var { wallToggle, removeWallState, isStartViz, isReset } = this.props;
+    let reset = true;
+    if (isStartViz && this.state.isStart) {
+      console.log("Inisde isStartViz");
       this.visualizeDijkstra();
+      this.state.isStart = false;
+    }
+    if (isReset) {
+      this.resetGrid();
     }
     return (
       <div className="grid">
@@ -232,14 +251,7 @@ to allow for partial renders inside of a state array.
           return (
             <div key={rowidx}>
               {row.map((node, node_idx) => {
-                const {
-                  row,
-                  col,
-                  isEnd,
-                  isStart,
-                  isWall,
-                  isDrag,
-                } = node;
+                const { row, col, isEnd, isStart, isWall, isDrag } = node;
                 return (
                   <Node
                     draggable={isDrag}
@@ -254,12 +266,8 @@ to allow for partial renders inside of a state array.
                     }
                     onDragOver={(e) => this.handleDragOver(e)}
                     onDrop={(e, row, col) => this.handleDrop(e, row, col)}
-                    onMouseDown={(row, col) =>
-                      this.handleMouseDown(row, col)
-                    }
-                    onMouseEnter={(row, col) =>
-                      this.handleMouseEnter(row, col)
-                    }
+                    onMouseDown={(row, col) => this.handleMouseDown(row, col)}
+                    onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
                     onMouseUp={() => this.handleMouseUp()}
                   ></Node>
                 );
