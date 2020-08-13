@@ -14,6 +14,8 @@ import PathfindingVisualizer from "./PathPlannerViz";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 
+var errorMessage;
+
 export default class HotBar extends Component {
   constructor() {
     super();
@@ -25,14 +27,17 @@ export default class HotBar extends Component {
       isStartViz: false,
       isReset: false,
     };
+    this.child = React.createRef();
   }
   handleOnClickWall() {
-    if (!this.state.isStartViz) {
+    if (!this.state.isStartViz && !this.state.removeWallState) {
       let wall = this.state.wallMode === "Wall Off" ? "Wall On" : "Wall Off";
       let fcolor =
         this.state.fontColorAddWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
       this.setState({ wallMode: wall, fontColorAddWall: fcolor });
     } else {
+      console.log("Testing!!!!!!!!!!!!!!!");
+      // errorMessage = "Can't have Wall On and Remove Wall On at this same time";
       this.myFunction();
     }
   }
@@ -42,25 +47,47 @@ export default class HotBar extends Component {
   }
   handleOnClickReset() {
     let reset = !this.state.isReset;
-    this.setState({isReset: reset});
+    console.log("this.child ", this.child);
+    this.child.current.resetGrid();
+    this.setState({ isReset: reset, isStartViz: false });
   }
   handleOnClickRemoveWall() {
-    let fcolor =
-      this.state.fontColorRemoveWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
-    let rwallState = !this.state.removeWallState;
-    this.setState({ fontColorRemoveWall: fcolor, removeWallState: rwallState });
+    if (!this.state.isStartViz && this.state.wallMode === "Wall Off") {
+      let fcolor =
+        this.state.fontColorRemoveWall === "#FFFFFF" ? "#FFC107" : "#FFFFFF";
+      let rwallState = !this.state.removeWallState;
+      this.setState({
+        fontColorRemoveWall: fcolor,
+        removeWallState: rwallState,
+      });
+    } else {
+      // console.log(" Inside Remove Wall");
+      // errorMessage = "Can't have Wall On and Remove Wall On at this same time";
+      this.myFunction();
+    }
   }
 
   myFunction() {
+    console.log("Inside myFunction");
     var x = document.getElementById("text-message");
     if (x.style.display === "none") {
       x.style.display = "block";
+      console.log("Inside the block");
     } else {
       x.style.display = "none";
     }
   }
 
   render() {
+    // if (
+    //   this.state.isStartViz &&
+    //   !this.state.removeWallState &&
+    //   this.state.wallMode === "Wall Off"
+    // ) {
+    //   errorMessage = "Click the Reset Button To Clear Grid and Modify Walls!";
+    //   this.myFunction();
+    // }
+
     return (
       <div className="PureComponent">
         <AppBar
@@ -133,25 +160,32 @@ export default class HotBar extends Component {
               style={{ display: "none" }}
               className="text-message"
             >
-              <Typography variant="h6" style={{ color: "orange" }} color="inherit">
+              <Typography
+                variant="h6"
+                style={{ color: "orange" }}
+                color="inherit"
+              >
                 Click the Reset Button To Clear Grid and Modify Walls!
               </Typography>
             </div>
           </Toolbar>
         </AppBar>
-        <div
-          id="text-message"
-          style={{ display: "none" }}
-          className="text-message"
-        >
-          testing!!!!
-        </div>
         <PathfindingVisualizer
+          ref={this.child}
           wallToggle={this.state.wallMode === "Wall Off" ? false : true}
           removeWallState={this.state.removeWallState}
           isStartViz={this.state.isStartViz}
           isReset={this.state.isReset}
         ></PathfindingVisualizer>
+        <div className ="message">
+        <Typography
+          variant="h6"
+          style={{ color: "black" }}
+          color="inherit"
+        >
+          Made with Love and React by Aaron Li and Vincent Zagala \(^_^)/
+        </Typography>
+        </div>
       </div>
     );
   }

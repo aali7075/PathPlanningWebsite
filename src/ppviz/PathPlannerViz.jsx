@@ -3,6 +3,18 @@ import Node from "./node/node";
 import SidebarExampleVisible from "./Navbar";
 import { dijkstra, getNodesInShortestPathOrder } from "../algorithms/dijkstra";
 import "./PathPlannerViz.css";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import BrushIcon from "@material-ui/icons/Brush";
+import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import RedoIcon from "@material-ui/icons/Redo";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 var START_NODE_ROW = 10;
 var START_NODE_COL = 15;
@@ -51,6 +63,8 @@ const ToggledWall = (grid, row, col) => {
   }
   return new_grid;
 };
+
+
 
 const RemoveWall = (grid, row, col) => {
   const new_grid = grid.slice();
@@ -226,24 +240,34 @@ to allow for partial renders inside of a state array.
   resetGrid() {
     for (let row = 0; row < 20; row++) {
       for (let col = 0; col < 50; col++) {
-        document.getElementById(`node-${row}-${col}`).className = "node node";
+        document.getElementById(`node-${row}-${col}`).className =
+          "node node";
       }
     }
+    START_NODE_ROW = 10;
+    START_NODE_COL = 15;
+    FINISH_NODE_ROW = 10;
+    FINISH_NODE_COL = 35;
+    document.getElementById(`node-${10}-${15}`).className =
+      "node node-start";
+    document.getElementById(`node-${10}-${35}`).className =
+      "node node-end";
+    console.log("Inside the resetGrid");
+    let initialGrid = GetInitialGrid();
+    this.setState({ grid: initialGrid });
   }
 
   render() {
     const { grid } = this.state;
     //grabbing attributes from this.state
     var { wallToggle, removeWallState, isStartViz, isReset } = this.props;
-    let reset = true;
     if (isStartViz && this.state.isStart) {
       console.log("Inisde isStartViz");
       this.visualizeDijkstra();
-      this.state.isStart = false;
     }
-    if (isReset) {
-      this.resetGrid();
-    }
+    // if (isReset) {
+    //   this.resetGrid();
+    // }
     return (
       <div className="grid">
         {grid.map((row, rowidx) => {

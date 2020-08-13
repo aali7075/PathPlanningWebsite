@@ -15,3 +15,9 @@
 .text-message {
   padding-left: 50px;
 }
+
+.message{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
