@@ -43,7 +43,7 @@ export default class HotBar extends Component {
   }
   handleOnClickStartViz() {
     let startViz = !this.state.isStartViz;
-    this.setState({ isStartViz: startViz });
+    this.setState({ isStartViz: startViz, isReset: false, removeWallState: false, wallMode: "Wall Off", fontColorAddWall: "#FFFFFF", fontColorRemoveWall: "#FFFFFF"  });
   }
   handleOnClickReset() {
     let reset = !this.state.isReset;
@@ -68,14 +68,14 @@ export default class HotBar extends Component {
   }
 
   myFunction() {
-    console.log("Inside myFunction");
-    var x = document.getElementById("text-message");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-      console.log("Inside the block");
-    } else {
-      x.style.display = "none";
-    }
+    // console.log("Inside myFunction");
+    // var x = document.getElementById("text-message");
+    // if (x.style.display === "none") {
+    //   x.style.display = "block";
+    //   console.log("Inside the block");
+    // } else {
+    //   x.style.display = "none";
+    // }
   }
 
   render() {
@@ -157,7 +157,7 @@ export default class HotBar extends Component {
             </Typography>
             <div
               id="text-message"
-              style={{ display: "none" }}
+              style={{ display: "block" }}
               className="text-message"
             >
               <Typography
